@@ -74,14 +74,21 @@ class Graph:
                     if neighbor not in visited_vertices:
                         plan_to_visit.push(neighbor)
 
-    def dft_recursive(self, starting_vertex):
+    def dft_recursive(self, starting_vertex, visited=None):
         """
         Print each vertex in depth-first order
         beginning from starting_vertex.
 
         This should be done using recursion.
         """
-        pass  # TODO
+        if visited is None:
+            visited = set()
+
+        visited.add(starting_vertex)
+        print(starting_vertex)
+        for child_vert in self.vertices[starting_vertex]:
+            if child_vert not in visited:
+                self.dft_recursive(child_vert, visited)
 
     def bfs(self, starting_vertex, destination_vertex):
         """
@@ -137,7 +144,8 @@ class Graph:
                     updated_path = current_path + [current_vertex]
                     neighbors_to_visit.push((neighbor, updated_path))
 
-    def dfs_recursive(self, starting_vertex, destination_vertex):
+    def dfs_recursive(self, starting_vertex, destination_vertex, visited=None,
+                      path=None):
         """
         Return a list containing a path from
         starting_vertex to destination_vertex in
@@ -145,7 +153,29 @@ class Graph:
 
         This should be done using recursion.
         """
-        pass  # TODO
+        if visited is None:
+            visited = set()
+
+        if path is None:
+            path = []
+
+        visited.add(starting_vertex)
+        path = path + [starting_vertex]
+
+        if starting_vertex == destination_vertex:
+            return path
+
+        for child_vert in self.get_neighbors(starting_vertex):
+            if child_vert not in visited:
+                new_path = self.dfs_recursive(child_vert, destination_vertex,
+                                              visited, path)
+
+                if new_path:
+                    return new_path
+
+        return None
+
+
 
 if __name__ == '__main__':
     graph = Graph()  # Instantiate your graph
